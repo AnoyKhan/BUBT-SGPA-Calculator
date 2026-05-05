@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGPA Calculator - Calculate Your Semester SGPA</title>
+    
+    <style>
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a202c;
+        }
+
+        /* ===== CONTAINER & LAYOUT ===== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER SECTION ===== */
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: slideDown 0.6s ease-out;
+            margin-top: 30px;
+        }
+
+        .header-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        header h1 {
+            font-size: 42px;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 18px;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        /* ===== CARD STYLES ===== */
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== STEP 1: NUMBER INPUT SECTION ===== */
+        .step-section {
+            margin-bottom: 40px;
+        }
+
+        .step-section h2 {
+            font-size: 24px;
+            margin-bottom: 28px;
+            color: #1a202c;
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group input[type="number"] {
+            max-width: 200px;
+        }
+
+        /* ===== BUTTON STYLES ===== */
+        .btn {
+            padding: 14px 36px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            max-width: 280px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27AE60 0%, #1E8449 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(39, 174, 96, 0.5);
+        }
+
+        /* ===== SUBJECTS GRID SECTION ===== */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .subject-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .subject-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* Subject card header */
+        .subject-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .subject-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .subject-card.failed {
+            border-color: #E74C3C;
+            background: #FEF5F4;
+        }
+
+        .subject-card.passed {
+            border-color: #27AE60;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.passed {
+            background: #D5F4E6;
+            color: #27AE60;
+        }
+
+        .status-badge.failed {
+            background: #FADBD8;
+            color: #E74C3C;
+        }
+
+        /* Grade point display */
+        .grade-display {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            text-align: center;
+            font-size: 13px;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grade-display .grade-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+            margin-top: 6px;
+        }
+
+        /* ===== SUMMARY SECTION ===== */
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-bottom: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.3);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .summary-item {
+            padding: 20px;
+        }
+
+        .summary-item h3 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            opacity: 0.85;
+            margin-bottom: 12px;
+        }
+
+        .summary-item .value {
+            font-size: 36px;
+            font-weight: 800;
+        }
+
+        .summary-item .value.SGPA {
+            font-size: 52px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .summary-item .unit {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-left: 6px;
+        }
+
+        .status-text {
+            font-size: 15px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+        }
+
+        .status-text.success {
+            color: #C8E6C9;
+        }
+
+        .status-text.warning {
+            color: #FFE082;
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .button-group .btn {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        @media (max-width: 640px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group .btn {
+                width: 100%;
+            }
+        }
+
+        /* ===== HIDDEN/VISIBLE STATES ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        .step1-container {
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        /* ===== ALERTS & MESSAGES ===== */
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+            font-weight: 600;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #D5F4E6;
+            color: #27AE60;
+            border-left: 5px solid #27AE60;
+        }
+
+        .alert-error {
+            background: #FADBD8;
+            color: #E74C3C;
+            border-left: 5px solid #E74C3C;
+        }
+
+        .alert-warning {
+            background: #FEF5E7;
+            color: #F39C12;
+            border-left: 5px solid #F39C12;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .subject-card {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            header {
+                margin-bottom: 40px;
+                margin-top: 20px;
+            }
+
+            .header-icon {
+                font-size: 48px;
+                margin-bottom: 16px;
+            }
+
+            header h1 {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+
+            header p {
+                font-size: 16px;
+            }
+
+            .card {
+                padding: 28px 20px;
+                border-radius: 16px;
+            }
+
+            .subjects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .summary-item .value {
+                font-size: 32px;
+            }
+
+            .summary-item .value.SGPA {
+                font-size: 44px;
+            }
+
+            .input-group input[type="number"] {
+                max-width: 100%;
+            }
+
+            .btn-primary {
+                max-width: 100%;
+            }
+
+            .step-section h2 {
+                font-size: 20px;
+            }
+        }
+
+        /* ===== RESULTS SECTION ===== */
+        .results-section {
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        /* Loading state */
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Empty state message */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #95A5A6;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        /* ===== SUMMARY TABLE STYLES ===== */
+        .table-container {
+            margin-top: 40px;
+            overflow-x: auto;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .summary-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .summary-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .summary-table tbody tr:hover {
+            background: #f7fafc;
+        }
+
+        .summary-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            text-align: center;
+            min-width: 40px;
+        }
+
+        .grade-badge.a-plus,
+        .grade-badge.a {
+            background: #D4EDDA;
+            color: #155724;
+        }
+
+        .grade-badge.a-minus,
+        .grade-badge.b-plus {
+            background: #D1ECF1;
+            color: #0C5460;
+        }
+
+        .grade-badge.b,
+        .grade-badge.b-minus {
+            background: #E2E3E5;
+            color: #383D41;
+        }
+
+        .grade-badge.c-plus,
+        .grade-badge.c {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        .grade-badge.d {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+
+        .grade-badge.f {
+            background: #F5C6CB;
+            color: #721C24;
+            font-weight: 800;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== HEADER ===== -->
+        <header>
+            <div class="header-icon">📊</div>
+            <h1>SGPA Calculator</h1>
+            <p>Calculate your semester SGPA instantly</p>
+        </header>
+
+        <!-- ===== STEP 1: NUMBER OF SUBJECTS INPUT ===== -->
+        <section class="step-section step1-container" id="step1">
+            <div class="card">
+                <h2>Step 1: Enter Number of Subjects</h2>
+                
+                <div class="input-group">
+                    <label for="numSubjects">How many subjects are you taking?</label>
+                    <input 
+                        type="number" 
+                        id="numSubjects" 
+                        min="1" 
+                        max="20" 
+                        value="1"
+                        placeholder="Enter number between 1 and 20"
+                    >
+                </div>
+
+                <button class="btn btn-primary" onclick="createSubjectInputs()">
+                    Create Subjects
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== STEP 2: SUBJECTS INPUT FORM ===== -->
+        <section id="step2" class="step-section hidden">
+            <div class="step1-container">
+                <div class="card">
+                    <h2>Step 2: Enter Subject Details</h2>
+                </div>
+            </div>
+
+            <!-- Subjects Grid (dynamically populated) -->
+            <div id="subjectsContainer" class="subjects-grid"></div>
+
+            <!-- ===== SUMMARY SECTION ===== -->
+            <div id="summarySection" class="card summary-card hidden">
+                <div class="summary-grid">
+                    <!-- Total Credit Hour -->
+                    <div class="summary-item">
+                        <h3>📚 Total Credit Hour</h3>
+                        <div>
+                            <span class="value" id="totalCredit">0.00</span>
+                            <span class="unit">Cr</span>
+                        </div>
+                    </div>
+
+                    <!-- Total Grade Point × Credit -->
+                    <div class="summary-item">
+                        <h3>⭐ Total Grade Point × Credit</h3>
+                        <div>
+                            <span class="value" id="totalGradeCredit">0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Final SGPA -->
+                    <div class="summary-item">
+                        <h3>🎯 Final SGPA</h3>
+                        <div>
+                            <span class="value SGPA" id="finalSGPA">0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Text -->
+                <div class="status-text" id="statusText"></div>
+            </div>
+
+            <!-- ===== SUMMARY TABLE ===== -->
+            <div id="tableSection" class="card hidden">
+                <div class="table-title">Subject Summary</div>
+                <div class="table-container">
+                    <table class="summary-table" id="summaryTableElement">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                                <th>Grade Point</th>
+                                <th>Letter Grade</th>
+                                <th>Credit Hour</th>
+                                <th>Total (GP × Cr)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== ACTION BUTTONS ===== -->
+            <div class="button-group">
+                <button class="btn btn-success" onclick="calculateSGPA()">
+                    Calculate SGPA
+                </button>
+                <button class="btn btn-secondary" onclick="resetForm()">
+                    Reset
+                </button>
+            </div>
+
+            <!-- ===== ALERT MESSAGES ===== -->
+            <div id="alertBox" class="alert"></div>
+        </section>
+    </div>
+
+    <script>
+        // ===== GLOBAL VARIABLES & DATA STRUCTURE =====
+        let subjects = []; // Array to store subject data
+
+        // Grade scale mapping
+        const gradeScale = {
+            80: 4.00,
+            75: 3.75,
+            70: 3.50,
+            65: 3.25,
+            60: 3.00,
+            55: 2.75,
+            50: 2.50,
+            45: 2.25,
+            40: 2.00,
+            0: 0.00
+        };
+
+        // ===== FUNCTION: Get Letter Grade from Marks =====
+        // This function converts marks to letter grades (A+, A, A-, B+, etc.)
+        function getLetterGrade(marks) {
+            if (marks >= 80) return 'A+';
+            if (marks >= 75) return 'A';
+            if (marks >= 70) return 'A-';
+            if (marks >= 65) return 'B+';
+            if (marks >= 60) return 'B';
+            if (marks >= 55) return 'B-';
+            if (marks >= 50) return 'C+';
+            if (marks >= 45) return 'C';
+            if (marks >= 40) return 'D';
+            return 'F';
+        }
+
+        // ===== FUNCTION: Get Grade Point from Marks =====
+        // This function takes marks and returns the corresponding grade point
+        // based on the grading scale
+        function getGradePoint(marks) {
+            // If marks is below 40, it's failed (0.00)
+            if (marks < 40) return 0.00;
+            
+            // Check each grade threshold from highest to lowest
+            if (marks >= 80) return 4.00;
+            if (marks >= 75) return 3.75;
+            if (marks >= 70) return 3.50;
+            if (marks >= 65) return 3.25;
+            if (marks >= 60) return 3.00;
+            if (marks >= 55) return 2.75;
+            if (marks >= 50) return 2.50;
+            if (marks >= 45) return 2.25;
+            if (marks >= 40) return 2.00;
+            
+            return 0.00;
+        }
+
+        // ===== FUNCTION: Create Subject Input Fields =====
+        // Dynamically creates input fields based on the number of subjects entered
+        function createSubjectInputs() {
+            // Get the number of subjects from input field
+            const numSubjects = parseInt(document.getElementById('numSubjects').value);
+
+            // Validation: Check if input is valid
+            if (isNaN(numSubjects) || numSubjects < 1 || numSubjects > 20) {
+                showAlert('Please enter a number between 1 and 20', 'error');
+                return;
+            }
+
+            // Initialize subjects array with empty objects
+            subjects = Array(numSubjects).fill(null).map(() => ({
+                name: '',
+                marks: 0,
+                credit: 0,
+                gradePoint: 0.00,
+                failed: false
+            }));
+
+            // Hide step 1 and show step 2
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+
+            // Render the subject input cards
+            renderSubjectCards();
+
+            // Show success message
+            showAlert(`${numSubjects} subject field(s) created successfully!`, 'success');
+        }
+
+        // ===== FUNCTION: Render Subject Cards =====
+        // Creates and displays HTML for each subject input card
+        function renderSubjectCards() {
+            const container = document.getElementById('subjectsContainer');
+            container.innerHTML = ''; // Clear previous content
+
+            // Loop through each subject and create a card
+            subjects.forEach((subject, index) => {
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.id = `subject-${index}`;
+
+                card.innerHTML = `
+                    <!-- Subject header with title and status -->
+                    <div class="subject-header">
+                        <span class="subject-title">Subject ${index + 1}</span>
+                        <span class="status-badge passed" id="status-${index}">Pending</span>
+                    </div>
+
+                    <!-- Subject Name Input -->
+                    <div class="input-group">
+                        <label for="subjectName-${index}">Subject Name</label>
+                        <input 
+                            type="text" 
+                            id="subjectName-${index}" 
+                            placeholder="e.g., Mathematics"
+                            value="${subject.name}"
+                            onchange="updateSubjectData(${index}, 'name', this.value)"
+                        >
+                    </div>
+
+                    <!-- Marks Input -->
+                    <div class="input-group">
+                        <label for="marks-${index}">Marks (0-100)</label>
+                        <input 
+                            type="number" 
+                            id="marks-${index}" 
+                            min="0" 
+                            max="100" 
+                            placeholder="e.g., 85"
+                            value="${subject.marks || ''}"
+                            onchange="updateSubjectData(${index}, 'marks', this.value)"
+                            oninput="updateGradePointDisplay(${index})"
+                        >
+                    </div>
+
+                    <!-- Credit Hour Input -->
+                    <div class="input-group">
+                        <label for="credit-${index}">Credit Hour</label>
+                        <input 
+                            type="number" 
+                            id="credit-${index}" 
+                            min="0.5" 
+                            step="0.5" 
+                            placeholder="e.g., 3.0"
+                            value="${subject.credit || ''}"
+                            onchange="updateSubjectData(${index}, 'credit', this.value)"
+                        >
+                    </div>
+
+                    <!-- Grade Point Display (read-only) -->
+                    <div class="grade-display">
+                        <span>Grade Point: <span class="grade-value" id="gradePoint-${index}">0.00</span></span>
+                        <span style="margin-left: 12px; font-size: 12px;">Letter Grade: <span class="grade-badge" id="letterGrade-${index}" style="margin-left: 4px;">-</span></span>
+                    </div>
+                `;
+
+                // Add the card to the container
+                container.appendChild(card);
+            });
+        }
+
+        // ===== FUNCTION: Update Subject Data =====
+        // Updates the subject data array when user changes input values
+        function updateSubjectData(index, field, value) {
+            if (field === 'name') {
+                subjects[index].name = value;
+            } else if (field === 'marks') {
+                const marks = parseFloat(value) || 0;
+                subjects[index].marks = marks;
+                // Auto-calculate grade point
+                subjects[index].gradePoint = getGradePoint(marks);
+                subjects[index].failed = marks < 40;
+                updateGradePointDisplay(index);
+            } else if (field === 'credit') {
+                subjects[index].credit = parseFloat(value) || 0;
+            }
+        }
+
+        // ===== FUNCTION: Update Grade Point Display =====
+        // Updates the grade point display for a specific subject
+        function updateGradePointDisplay(index) {
+            const gradePointElement = document.getElementById(`gradePoint-${index}`);
+            const letterGradeElement = document.getElementById(`letterGrade-${index}`);
+            const marks = subjects[index].marks;
+            const gradePoint = getGradePoint(marks);
+            const letterGrade = getLetterGrade(marks);
+
+            // Update the grade point display
+            gradePointElement.textContent = gradePoint.toFixed(2);
+            
+            // Update letter grade display
+            if (letterGradeElement) {
+                letterGradeElement.textContent = letterGrade;
+                
+                // Update badge styling based on letter grade
+                letterGradeElement.className = `grade-badge ${letterGrade.toLowerCase().replace('+', '-plus').replace('-', '-minus')}`;
+            }
+
+            // Update card styling based on pass/fail
+            const card = document.getElementById(`subject-${index}`);
+            const statusBadge = document.getElementById(`status-${index}`);
+
+            if (marks < 40) {
+                card.classList.add('failed');
+                card.classList.remove('passed');
+                statusBadge.textContent = 'Failed';
+                statusBadge.classList.add('failed');
+                statusBadge.classList.remove('passed');
+            } else {
+                card.classList.remove('failed');
+                card.classList.add('passed');
+                statusBadge.textContent = 'Passed';
+                statusBadge.classList.remove('failed');
+                statusBadge.classList.add('passed');
+            }
+        }
+
+        // ===== FUNCTION: Validate All Inputs =====
+        // Checks if all subject data is valid before calculating SGPA
+        function validateInputs() {
+            // Check if any subject is empty or has invalid data
+            for (let i = 0; i < subjects.length; i++) {
+                const marks = subjects[i].marks;
+                const credit = subjects[i].credit;
+
+                // Validate marks (must be 0-100)
+                if (isNaN(marks) || marks < 0 || marks > 100) {
+                    showAlert(`Subject ${i + 1}: Marks must be between 0 and 100`, 'error');
+                    return false;
+                }
+
+                // Validate credit (must be greater than 0)
+                if (isNaN(credit) || credit <= 0) {
+                    showAlert(`Subject ${i + 1}: Credit hour must be greater than 0`, 'error');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // ===== FUNCTION: Display Summary Table =====
+        // Creates and displays a table with all subject details after calculation
+        function displaySummaryTable() {
+            const tableBody = document.getElementById('tableBody');
+            const tableSection = document.getElementById('tableSection');
+            
+            // Clear previous table rows
+            tableBody.innerHTML = '';
+
+            // Create a row for each subject
+            subjects.forEach((subject, index) => {
+                const row = document.createElement('tr');
+                const letterGrade = getLetterGrade(subject.marks);
+                const badgeClass = letterGrade.toLowerCase().replace('+', '-plus').replace('-', '-minus');
+                const totalGradeCredit = (subject.gradePoint * subject.credit).toFixed(2);
+                const statusText = subject.marks < 40 ? '❌ Failed' : '✓ Passed';
+
+                row.innerHTML = `
+                    <td><strong>${subject.name || `Subject ${index + 1}`}</strong></td>
+                    <td>${subject.marks}</td>
+                    <td>${subject.gradePoint.toFixed(2)}</td>
+                    <td><span class="grade-badge ${badgeClass}">${letterGrade}</span></td>
+                    <td>${subject.credit.toFixed(1)}</td>
+                    <td>${totalGradeCredit}</td>
+                    <td>${statusText}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Show the table section
+            tableSection.classList.remove('hidden');
+        }
+
+        // ===== FUNCTION: Calculate SGPA =====
+        // Calculates the final SGPA based on all subjects
+        // Formula: SGPA = sum(gradePoint × credit) / totalCredit
+        function calculateSGPA() {
+            // Validate inputs first
+            if (!validateInputs()) {
+                return;
+            }
+
+            // Calculate totals
+            let totalCredit = 0;
+            let totalGradeCredit = 0;
+            let failedCount = 0;
+
+            // Loop through all subjects and calculate
+            subjects.forEach(subject => {
+                totalCredit += subject.credit;
+                totalGradeCredit += (subject.gradePoint * subject.credit);
+
+                if (subject.marks < 40) {
+                    failedCount++;
+                }
+            });
+
+            // Calculate final SGPA
+            const finalSGPA = totalCredit > 0 ? totalGradeCredit / totalCredit : 0;
+
+            // Update summary section
+            document.getElementById('totalCredit').textContent = totalCredit.toFixed(2);
+            document.getElementById('totalGradeCredit').textContent = totalGradeCredit.toFixed(2);
+            document.getElementById('finalSGPA').textContent = finalSGPA.toFixed(2);
+
+            // Update status text
+            const statusTextElement = document.getElementById('statusText');
+            if (failedCount > 0) {
+                statusTextElement.className = 'status-text warning';
+                statusTextElement.innerHTML = `
+                    ⚠️ <strong>${failedCount} subject(s) failed</strong> - Please work harder on these subjects!
+                `;
+            } else {
+                statusTextElement.className = 'status-text success';
+                statusTextElement.innerHTML = `
+                    ✓ <strong>Congratulations!</strong> You passed all subjects.
+                `;
+            }
+
+            // Show summary section
+            document.getElementById('summarySection').classList.remove('hidden');
+
+            // Display the summary table
+            displaySummaryTable();
+
+            // Show success message
+            showAlert(`SGPA calculated successfully! Final SGPA: ${finalSGPA.toFixed(2)}`, 'success');
+        }
+
+        // ===== FUNCTION: Show Alert Message =====
+        // Displays an alert message to the user
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert show alert-${type}`;
+
+            // Auto-hide alert after 5 seconds
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // ===== FUNCTION: Reset Form =====
+        // Clears all data and returns to step 1
+        function resetForm() {
+            // Clear all data
+            subjects = [];
+            document.getElementById('numSubjects').value = '';
+
+            // Hide step 2 and show step 1
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+
+            // Clear subjects container
+            document.getElementById('subjectsContainer').innerHTML = '';
+
+            // Hide summary and table
+            document.getElementById('summarySection').classList.add('hidden');
+            document.getElementById('tableSection').classList.add('hidden');
+
+            // Clear alert
+            document.getElementById('alertBox').classList.remove('show');
+
+            // Show success message
+            showAlert('Form reset successfully!', 'success');
+        }
+
+        // ===== FUNCTION: Allow Enter Key to Trigger Create =====
+        // Allows user to press Enter in the number input to create subjects
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('numSubjects').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    createSubjectInputs();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
