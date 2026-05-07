@@ -1,13 +1,3 @@
-<!--
-    BUBT SGPA Calculator
-    Copyright © 2026 Md Shakib Khan Anoy. All Rights Reserved.
-    
-    This software is proprietary and confidential. Unauthorized copying, 
-    modification, distribution, or use is strictly prohibited.
-    For permissions, contact: Md Shakib Khan Anoy
-    
-    License: See LICENSE file for complete terms and conditions.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +9,11 @@
 </head>
 <body>
     <div id="root"></div>
-    
+    <script>
+      // Redirect 404s to the index.html
+      if (window.location.pathname.endsWith('.html') === false && !window.location.pathname.includes('.')) {
+        window.history.replaceState(null, '', '/BUBT-SGPA-Calculator/');
+      }
+    </script>
 </body>
 </html>
