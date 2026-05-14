@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![BUBT SGPA Calculator Logo](assets/logo.png) <!-- TODO: Add actual project logo or an appropriate icon -->
+![BUBT SGPA Calculator Logo](./Screenshots/bubt-logo-png_seeklogo-498306.png) <!-- TODO: Add actual project logo or an appropriate icon -->
 
 [![GitHub stars](https://img.shields.io/github/stars/AnoyKhan/BUBT-SGPA-Calculator?style=for-the-badge)](https://github.com/AnoyKhan/BUBT-SGPA-Calculator/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/AnoyKhan/BUBT-SGPA-Calculator?style=for-the-badge)](https://github.com/AnoyKhan/BUBT-SGPA-Calculator/network)
@@ -30,8 +30,8 @@ The **BUBT SGPA Calculator** is a user-friendly web application designed to help
 
 ## 🖥️ Screenshots
 
-![BUBT SGPA Calculator Desktop Screenshot](assets/screenshot-desktop.png) <!-- TODO: Add actual desktop screenshot -->
-![BUBT SGPA Calculator Mobile Screenshot](assets/screenshot-mobile.png) <!-- TODO: Add actual mobile screenshot -->
+![BUBT SGPA Calculator Screenshot](./Screenshots/screencapture-anoykhan-github-io-BUBT-SGPA-Calculator-2026-05-14-19_38_35.png) <!-- TODO: Add actual desktop screenshot -->
+![BUBT SGPA Calculator Screenshot](./Screenshots/final_result.png) <!-- TODO: Add actual mobile screenshot -->
 
 ## 🛠️ Tech Stack
 
