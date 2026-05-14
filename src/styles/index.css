@@ -217,6 +217,11 @@ header p {
     border-color: #27AE60;
 }
 
+.subject-card.pending {
+    border-color: #F39C12;
+    background: #FEF9E7;
+}
+
 /* Status badge */
 .status-badge {
     display: inline-block;
@@ -236,6 +241,11 @@ header p {
 .status-badge.failed {
     background: #FADBD8;
     color: #E74C3C;
+}
+
+.status-badge.pending {
+    background: #FCF3CF;
+    color: #D68910;
 }
 
 /* Grade point display */

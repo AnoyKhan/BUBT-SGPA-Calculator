@@ -10,11 +10,12 @@ export const SubjectCard = ({ index, subject, onChange }) => {
   const gradePoint = getGradePoint(marks);
   const letterGrade = getLetterGrade(marks);
   const badgeClass = getGradeBadgeClass(letterGrade);
-  const isFailed = marks < 40;
-  const statusBadgeClass = isFailed ? "failed" : "passed";
-  const statusText = isFailed ? "Failed" : "Pending";
+  // Show "Pending" if marks is 0 (not entered), otherwise check if failed
+  const isFailed = marks > 0 && marks < 40;
+  const statusBadgeClass = marks === 0 ? "pending" : isFailed ? "failed" : "passed";
+  const statusText = marks === 0 ? "Pending" : isFailed ? "Failed" : "Passed";
 
-  const cardClass = `subject-card ${isFailed ? "failed" : "passed"}`;
+  const cardClass = `subject-card ${marks === 0 ? "pending" : isFailed ? "failed" : "passed"}`;
 
   return (
     <div className={cardClass} id={`subject-${index}`}>
